@@ -7,6 +7,7 @@ GET     /                           controllers.Application.index()
 POST    /search                     controllers.Application.searchPosted()
 GET     /search/:channel            controllers.Application.search(channel:String, page:Int ?= 1)
 GET     /search.xml/:channel        controllers.Application.searchAsXml(channel:String, page:Int ?= 1)
+GET     /lookup                     controllers.Application.findSong(artist, song)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

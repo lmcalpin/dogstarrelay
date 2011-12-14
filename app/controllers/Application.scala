@@ -1,12 +1,16 @@
 package controllers
 
 import play.api._
+
 import play.api.mvc._
 import play.api.data._
 import views._
 import scala.xml._
 
+import _root_.java.net.{URLDecoder, URLEncoder}
+
 object Application extends Controller {
+  val xmlloader = XML.withSAXParser(new org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl().newSAXParser())
   val searchForm = Form("channel" -> requiredText)
 
   val channelOptions = List[(String, String)](
@@ -212,6 +216,19 @@ object Application extends Controller {
     }
   }
 
+  def findSong(artist: String, song: String) = Action {
+    val encodedArtist = URLEncoder.encode(artist, "UTF-8")
+    val encodedSong = URLEncoder.encode(song, "UTF-8")
+    val url = "http://www.dogstarradio.com/xspf_player/xspf_musicbrainz.php?artist=%s&title=%s".format(encodedArtist, encodedSong)
+    AsyncResult {
+      WS.url(url).get().map { s =>
+        val xml = xmlloader.loadString(s.getResponseBody())
+        println(xml)
+        Ok(views.html.lookup(xml.toString))
+      }
+    }
+  }
+
   private def doSearch(channel: String, page: Int)(f: Seq[Array[String]] => play.api.mvc.Result): play.api.mvc.Result = {
     // dogstarradio uses a zero-index for pagination, but we prefer a one-based index since it's more
     // user friendly
@@ -226,7 +243,6 @@ object Application extends Controller {
   }
 
   private def getSearchResults(s: com.ning.http.client.Response): Seq[Array[String]] = {
-    val xmlloader = XML.withSAXParser(new org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl().newSAXParser())
     val xml = xmlloader.loadString(s.getResponseBody())
     val tableHtml = xml \\ "table"
     val trs = tableHtml \ "tr"
@@ -236,5 +252,15 @@ object Application extends Controller {
       Array(x.child(1).text, x.child(2).text, x.child(3).text, x.child(4).text)
     }
     out
+  }
+  
+  // -- Javascript routing
+
+  def javascriptRoutes = Action {
+    Ok(
+      Routes.javascriptRouter("jsRoutes")(
+        routes.javascript.Application.findSong
+      )
+    ).as("text/javascript") 
   }
 }

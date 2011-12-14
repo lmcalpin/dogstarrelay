@@ -1,0 +1,133 @@
+html,body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-style: Arial, Helvetica;
+	text-align: center;
+	background-color: #eeeeee;
+	color: #3A4244;
+}
+
+#header {
+	margin: auto;
+    background: #436565;
+	color: #FFFFFF;
+	font: 32px Arial, Helvetica;
+	padding: 10px 30px;
+}
+
+#header a {
+	color: #FFFFFF;
+}
+
+#content-container {
+	background-color: #FFFFFF;
+	margin: auto;
+}
+
+#content {
+	margin: auto;
+	width: 800px;
+	text-align: left;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+#footer {
+	background-color: #3E3E3E;
+	color: #DFDFDF;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+#footer a {
+	color: #DFDFDF;
+}
+
+a {
+	color: #333300;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #666600;
+	text-decoration: underline;
+}
+
+.standardForm {
+	background: #FAFAFA;
+	padding-top: 5px;
+}
+
+table {
+	width: 100%;
+	padding: 0;
+	border-collapse: separate;
+	*border-collapse: collapse;
+	font-size: 13px;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+}
+
+table th,table td {
+	padding: 10px 10px 9px;
+	line-height: 18px;
+	text-align: left;
+}
+
+.standardForm label {
+	float: left;
+	width: 120px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 14px;
+}
+
+.clear {
+	clear: both;
+}
+
+.results {
+	
+}
+
+.even {
+	background-color: #ffffff;
+}
+
+.header {
+	background-color: #436565;
+	color: white;
+}
+
+.odd {
+	
+}
+
+.hint {
+	color: #505050;
+	font-style: italic;
+	padding-right: 15px;
+}
+
+.buttons {
+	background: #536565;
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.buttons input,.buttons a {
+	border: 1px solid #2F3A3A;
+	background: #fff;
+	font-size: 12px;
+	cursor: pointer;
+	display: inline-block;
+	padding: 5px 10px;
+	text-decoration: none;
+	color: #000;
+}

@@ -215,6 +215,9 @@ object Application extends Controller {
     }
   }
 
+  // TODO: clean up the results to erase unused javascript and make the
+  // formatting prettier. Make sure we keep the affiliate links for
+  // Mr. Dogstar's Amazon links though.
   def findSong(artist: String, song: String) = Action {
     val encodedArtist = URLEncoder.encode(artist, "UTF-8")
     val encodedSong = URLEncoder.encode(song, "UTF-8")

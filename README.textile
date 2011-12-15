@@ -1,7 +1,6 @@
 h1. dogstar relay
 
-This scrapes the "DogStarRadio":http://www.dogstarradio.com search screens for Sirius schedules
-and presents it in a format that's easier for electronic consumption.
+This scrapes the "DogStarRadio":http://www.dogstarradio.com search screens for Sirius schedules and presents it in a format that's easier for electronic consumption.
 
 To do an electronic search:
 

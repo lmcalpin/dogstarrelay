@@ -12,4 +12,4 @@ You can also search manually using the GUI.
 
 This project was written primarily as a demonstration of a Play! Framework 2.0 webapp written
 with Scala.  It demonstrates the built-in XML support in Scala, Asynchronous results in Play!,
-form submission, redirects, template inclusion, and more.
+form submission, redirects, javascript routing with ajax, template inclusion, and more.

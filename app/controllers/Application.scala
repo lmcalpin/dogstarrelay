@@ -7,7 +7,7 @@ import play.api.data._
 import views._
 import scala.xml._
 
-import _root_.java.net.{URLDecoder, URLEncoder}
+import _root_.java.net.{ URLDecoder, URLEncoder }
 
 object Application extends Controller {
   val xmlloader = XML.withSAXParser(new org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl().newSAXParser())
@@ -205,7 +205,6 @@ object Application extends Controller {
   def searchAsXml(channel: String, page: Int) = Action { implicit request =>
     doSearch(channel, page) { res =>
       val songs: Seq[SongInfo] = res map { new SongInfo(_) }
-      println(songs)
       val xml = <dogstarradio>
                   <channel><number>{ channel }</number><name>{ channelMap(channel) }</name></channel>
                   <songs>
@@ -220,13 +219,18 @@ object Application extends Controller {
     val encodedArtist = URLEncoder.encode(artist, "UTF-8")
     val encodedSong = URLEncoder.encode(song, "UTF-8")
     val url = "http://www.dogstarradio.com/xspf_player/xspf_musicbrainz.php?artist=%s&title=%s".format(encodedArtist, encodedSong)
-    AsyncResult {
+    println(url)
+    // AsyncResult doesn't work on Heroku
+    /*AsyncResult {
       WS.url(url).get().map { s =>
         val xml = xmlloader.loadString(s.getResponseBody())
         println(xml)
-        Ok(views.html.lookup(xml.toString))
       }
-    }
+      Ok(views.html.lookup(xml.toString))
+    }*/
+    val s = utils.WebService.get(url)
+    val xml = xmlloader.loadString(s)
+    Ok(views.html.lookup(xml.toString))
   }
 
   private def doSearch(channel: String, page: Int)(f: Seq[Array[String]] => play.api.mvc.Result): play.api.mvc.Result = {
@@ -234,16 +238,19 @@ object Application extends Controller {
     // user friendly
     val adjustedPage = page - 1
     val url = "http://www.dogstarradio.com/search_playlist.php?artist=&title=&channel=%s&month=&date=&shour=&sampm=&stz=&ehour=&eampm=&page=%d".format(channel, adjustedPage)
-    AsyncResult {
+    // AsyncResult doesn't work on Heroku
+    /*AsyncResult {
       WS.url(url).get().map { s =>
-        val searchResults = getSearchResults(s)
-        f(searchResults)
+        val searchResults = getSearchResults(s.getResponseBody())
       }
-    }
+      f(searchResults)
+    }*/
+    val searchResults = getSearchResults(utils.WebService.get(url))
+    f(searchResults)
   }
 
-  private def getSearchResults(s: com.ning.http.client.Response): Seq[Array[String]] = {
-    val xml = xmlloader.loadString(s.getResponseBody())
+  private def getSearchResults(s: String): Seq[Array[String]] = {
+    val xml = xmlloader.loadString(s)
     val tableHtml = xml \\ "table"
     val trs = tableHtml \ "tr"
     val startIdx = trs.findIndexOf { n => val att: String = n.child(0).attribute("class").getOrElse("").toString; att == "channel" }
@@ -253,14 +260,12 @@ object Application extends Controller {
     }
     out
   }
-  
+
   // -- Javascript routing
 
   def javascriptRoutes = Action {
     Ok(
       Routes.javascriptRouter("jsRoutes")(
-        routes.javascript.Application.findSong
-      )
-    ).as("text/javascript") 
+        routes.javascript.Application.findSong)).as("text/javascript")
   }
 }

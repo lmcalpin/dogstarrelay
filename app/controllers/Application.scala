@@ -222,7 +222,6 @@ object Application extends Controller {
     val encodedArtist = URLEncoder.encode(artist, "UTF-8")
     val encodedSong = URLEncoder.encode(song, "UTF-8")
     val url = "http://www.dogstarradio.com/xspf_player/xspf_musicbrainz.php?artist=%s&title=%s".format(encodedArtist, encodedSong)
-    println(url)
     // AsyncResult doesn't work on Heroku
     /*AsyncResult {
       WS.url(url).get().map { s =>

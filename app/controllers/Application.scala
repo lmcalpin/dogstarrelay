@@ -9,10 +9,13 @@ import scala.xml._
 
 import _root_.java.net.{ URLDecoder, URLEncoder }
 
+import models._
+
 object Application extends Controller {
   val xmlloader = XML.withSAXParser(new org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl().newSAXParser())
   val searchForm = Form("channel" -> requiredText)
 
+  // TODO: dynamically construct this list from dogstarradio's data
   val channelOptions = List[(String, String)](
     "2" -> "2 - SiriusXM Hits 1",
     "3" -> "3 - 20 on 20",
@@ -164,16 +167,16 @@ object Application extends Controller {
     "219" -> "219 - Sports Play-by-Play",
     "220" -> "220 - Sports Play-by-Play")
 
-  val channelMap = Map(channelOptions.map { s => (s._1, s._2) }: _*)
+  val channelMap = Map(channelOptions.map { s => (s._1.toInt, s._2) }: _*)
 
   def index = Action {
     Ok(views.html.index(searchForm, channelOptions))
   }
 
-  def search(channel: String, page: Int) = Action {
+  def search(channel: Int, page: Int) = Action {
     val realPage = if (page < 1) 1 else page
     doSearch(channel, page) { res =>
-      val filledSearchForm = searchForm.fill(channel)
+      val filledSearchForm = searchForm.fill(channel.toString)
       Ok(views.html.list(page, res, filledSearchForm, channelOptions))
     }
   }
@@ -183,26 +186,11 @@ object Application extends Controller {
       formWithErrors => BadRequest("oops"),
       {
         case (channel) =>
-          Redirect(routes.Application.search(channel, 1))
+          Redirect(routes.Application.search(channel.toInt, 1))
       })
   }
 
-  class SongInfo(vals: Array[String]) {
-    val artist: String = vals(0)
-    val song: String = vals(1)
-    val date: String = vals(2)
-    val time: String = vals(3)
-    def toXml() = {
-      <song>
-        <artist>{ artist }</artist>
-        <name>{ song }</name>
-        <date>{ date }</date>
-        <time>{ time }</time>
-      </song>
-    }
-  }
-
-  def searchAsXml(channel: String, page: Int) = Action { implicit request =>
+  def playlistAsXml(channel: Int, page: Int) = Action { implicit request =>
     doSearch(channel, page) { res =>
       val songs: Seq[SongInfo] = res map { new SongInfo(_) }
       val xml = <dogstarradio>
@@ -213,6 +201,20 @@ object Application extends Controller {
                 </dogstarradio>
       Ok(xml)
     }
+  }
+  
+  def searchAsXml(channel: Int, page: Int) = Action { implicit request =>
+    Redirect(routes.Application.playlistAsXml(channel, page))
+  }
+
+  def channelsAsXml() = Action { implicit request =>
+    val channels: Iterable[Channel] = channelMap.keys.toList.sorted.map { key => new Channel(key, channelMap.getOrElse(key, "")) }
+    val xml = <dogstarradio>
+                <channels>
+                  { channels.map(_.toXml()) }
+                </channels>
+              </dogstarradio>
+    Ok(xml)
   }
 
   // TODO: clean up the results to erase unused javascript and make the
@@ -235,7 +237,7 @@ object Application extends Controller {
     Ok(views.html.lookup(xml.toString))
   }
 
-  private def doSearch(channel: String, page: Int)(f: Seq[Array[String]] => play.api.mvc.Result): play.api.mvc.Result = {
+  private def doSearch(channel: Int, page: Int)(f: Seq[Array[String]] => play.api.mvc.Result): play.api.mvc.Result = {
     // dogstarradio uses a zero-index for pagination, but we prefer a one-based index since it's more
     // user friendly
     val adjustedPage = page - 1

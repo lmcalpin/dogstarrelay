@@ -2,10 +2,15 @@ h1. dogstar relay
 
 This scrapes the "DogStarRadio":http://www.dogstarradio.com search screens for Sirius schedules and presents it in a format that's easier for electronic consumption.
 
-To do an electronic search:
+To get a listing of all available channels:
 
 bc. 
-    http://dogstarrelay.herokuapp.com/search.xml?channel=XXX
+    http://dogstarrelay.herokuapp.com/channels.xml
+
+To do an electronic search for a channel's playlist:
+
+bc. 
+    http://dogstarrelay.herokuapp.com/playlist.xml?channel=XXX
  
 You can also search manually "using the GUI":http://dogstarrelay.herokuapp.com/.
 

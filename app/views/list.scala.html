@@ -6,7 +6,7 @@
     
 @link(newPage:Int) = @{ 
     val adjustedNewPage = if (newPage > 0) newPage else 1
-    routes.Application.search(searchForm.value.get, adjustedNewPage) 
+    routes.Application.search(searchForm.value.get.toInt, adjustedNewPage) 
 }
 
 @main("Dogstar Relay") {

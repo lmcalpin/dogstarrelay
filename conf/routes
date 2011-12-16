@@ -5,8 +5,10 @@
 # Home page
 GET     /                           controllers.Application.index()
 POST    /search                     controllers.Application.searchPosted()
-GET     /search/:channel            controllers.Application.search(channel:String, page:Int ?= 1)
-GET     /search.xml/:channel        controllers.Application.searchAsXml(channel:String, page:Int ?= 1)
+GET     /search/:channel            controllers.Application.search(channel:Int, page:Int ?= 1)
+GET     /search.xml/:channel        controllers.Application.searchAsXml(channel:Int, page:Int ?= 1)
+GET     /playlist.xml/:channel      controllers.Application.playlistAsXml(channel:Int, page:Int ?= 1)
+GET     /channels.xml               controllers.Application.channelsAsXml()
 GET     /lookup                     controllers.Application.findSong(artist, song)
 
 # Map static resources from the /public folder to the /assets URL path

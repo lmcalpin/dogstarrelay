@@ -9,5 +9,4 @@ project/target
 
 target
 
-tmp
-h.bat
+*.bat

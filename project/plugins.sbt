@@ -1,11 +1,6 @@
-resolvers ++= Seq(
-    DefaultMavenRepository,
-    Resolver.url("Play", url("http://download.playframework.org/ivy-releases/"))(Resolver.ivyStylePatterns),
-    "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
-)
+logLevel := Level.Warn
 
-libraryDependencies += "play" %% "play" % "2.0-beta"
+resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse" % "1.4.0")
+addSbtPlugin("play" % "sbt-plugin" % "2.0")
 
-addSbtPlugin("com.typesafe.startscript" % "xsbt-start-script-plugin" % "0.5.0")

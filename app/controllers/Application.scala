@@ -8,12 +8,13 @@ import views._
 import scala.xml._
 
 import _root_.java.net.{ URLDecoder, URLEncoder }
+import play.api.data.Forms._
 
 import models._
 
 object Application extends Controller {
-  val xmlloader = XML.withSAXParser(new org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl().newSAXParser())
-  val searchForm = Form("channel" -> requiredText)
+  val xmlloader = scala.xml.XML.withSAXParser(new org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl().newSAXParser())
+  val searchForm = Form("channel" -> text)
 
   // TODO: dynamically construct this list from dogstarradio's data
   val channelOptions = List[(String, String)](

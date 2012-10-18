@@ -174,7 +174,7 @@ object Application extends Controller {
     Ok(views.html.index(searchForm, channelOptions))
   }
 
-  def search(channel: Int, page: Int) = Action {
+  def search(channel: Int, page: Int) = Action { implicit request =>
     val realPage = if (page < 1) 1 else page
     doSearch(channel, page) { res =>
       val filledSearchForm = searchForm.fill(channel.toString)
@@ -268,7 +268,7 @@ object Application extends Controller {
 
   // -- Javascript routing
 
-  def javascriptRoutes = Action {
+  def javascriptRoutes() = Action { implicit request =>
     Ok(
       Routes.javascriptRouter("jsRoutes")(
         routes.javascript.Application.findSong)).as("text/javascript")

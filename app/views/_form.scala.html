@@ -1,7 +1,7 @@
-@(searchForm: Form[(String)], channelOptions: Seq[(String,String)]) 
-
-@helper.form(action = routes.Application.searchPosted, args = 'class -> "standardForm") {
-    @helper.select(
+@import helper._
+@(searchForm: Form[(String)], channelOptions: Seq[(String,String)])(implicit messages: Messages)
+@form(action = routes.Application.searchPosted, args = 'class -> "standardForm") {
+    @select(
         field = searchForm("channel"), 
         options = channelOptions,
         args = 'label -> "Select a channel and hit Search!", 'class -> "chzn-select"

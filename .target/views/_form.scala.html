@@ -1,0 +1,18 @@
+@(searchForm: Form[(String)], channelOptions: Seq[(String,String)]) 
+
+@helper.form(action = routes.Application.searchPosted, args = 'class -> "standardForm") {
+    @helper.select(
+        field = searchForm("channel"), 
+        options = channelOptions,
+        args = 'label -> "Select a channel and hit Search!", 'class -> "chzn-select"
+    )
+    <div class="buttons">
+      <button type="submit">Search</button>
+    </div>
+}
+
+<script type="text/javascript">$(".chzn-select").chosen();
+-->
+</script>
+
+

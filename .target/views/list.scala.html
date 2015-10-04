@@ -1,0 +1,57 @@
+@(page:Int, results: Seq[Array[String]], searchForm: Form[(String)], channelOptions: Seq[(String,String)])(implicit request:RequestHeader)
+
+@helper.javascriptRouter("jsRoutes")(
+    routes.javascript.Application.findSong
+)
+    
+@link(newPage:Int) = @{ 
+    val adjustedNewPage = if (newPage > 0) newPage else 1
+    routes.Application.search(searchForm.value.get.toInt, adjustedNewPage) 
+}
+
+@main("Dogstar Relay") {
+
+    @_form(searchForm, channelOptions)
+
+    <div class="buttons">
+        <a href="@link(page-1)">Prev</a>
+        <a href="@link(page+1)">Next</a>
+    </div>
+
+    <div id="lookupResults"></div>
+    
+    <script type="text/javascript" charset="utf-8">
+    <!--
+    function lookup(artist, song) {
+	    data = jsRoutes.controllers.Application.findSong(artist, song).ajax({
+	                success: function(data) {
+	                    $("#lookupResults").html(data);
+	                }
+	            });
+    }
+    -->
+    </script>
+    
+    <table>
+        <tr class="header">
+            <td>Action</td>
+            <td>Artist</td>
+            <td>Song</td>
+            <td>Date</td>
+            <td>Time</td>
+        </tr>
+        @results.zipWithIndex.map { case (song, idx) => 
+             <tr class="@{if (idx % 2 == 0) { "even" } else {"odd"}}">
+             <td><a href="#" onclick="lookup('@song(0)', '@song(1)')">Search</a>
+             @song.map { col =>
+	            <td>@col</td>
+	         }
+            </tr>
+        }
+    </table>
+    
+    <div class="buttons">
+        <a href="@link(page-1)">Prev</a>
+        <a href="@link(page+1)">Next</a>
+    </div>
+}

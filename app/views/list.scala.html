@@ -1,4 +1,4 @@
-@(page:Int, results: Seq[Array[String]], searchForm: Form[(String)], channelOptions: Seq[(String,String)])(implicit request:RequestHeader)
+@(page:Int, results: Seq[Seq[String]], searchForm: Form[(String)], channelOptions: Seq[(String,String)])(implicit request:RequestHeader, messages: Messages)
 
 @helper.javascriptRouter("jsRoutes")(
     routes.javascript.Application.findSong

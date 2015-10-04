@@ -1,6 +1,6 @@
 package models;
 
-class SongInfo(vals: Array[String]) {
+class SongInfo(vals: Seq[String]) {
   val artist: String = vals(0)
   val song: String = vals(1)
   val date: String = vals(2)

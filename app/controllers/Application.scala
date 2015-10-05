@@ -78,10 +78,6 @@ class Application @Inject() (cache: CacheApi) extends Controller {
     val xml = xmlloader.loadString(utils.WebService.get(url))
     val selectChannels = getByAtt(xml, "select", "name", "channel")
     val channels = for (x <- (selectChannels \\ "option") if !x.attribute("value").isEmpty) yield (x.attribute("value").get.text, x.text)
-    Logger.info(s"$channels")
-    Logger.info("hello???")
-    println("hi???????????")
-    println(channels)
     channels.toList
   }
 

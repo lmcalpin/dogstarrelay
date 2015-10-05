@@ -10,3 +10,4 @@ project/target
 target
 
 *.bat
+.sbtserver
